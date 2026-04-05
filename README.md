@@ -1,11 +1,13 @@
 # Count Masters — Steering Behaviours Edition
+# Par Tafsout ABDI
+# MIAGE IA2 2025/2026
 
-Jeu inspiré de **Count Masters: Stickman Games** (jeu mobile), recréé en appliquant les **comportements de pilotage (Steering Behaviours)** vus en cours de Systèmes IA (M2 IA2).
+Pour ce jeu je me suis inspirée de **Count Masters: Stickman Games** (jeu déja existant), recréé en appliquant les **comportements de pilotage (Steering Behaviours)** vus en cours .
 
-## Lancer le projet
+## Pour lancer le projet
 
 ```bash
-cd count_master
+cd path/.../count_master
 npx serve .
 ```
 
@@ -22,7 +24,7 @@ Le joueur contrôle un groupe de bonhommes (stickmen) bleus qui suivent la souri
 
 Les ennemis **meurent automatiquement au bout de 10 secondes** s'ils n'ont pas rattrapé le joueur. La taille des escouades ennemies **s'adapte au nombre de joueurs** en cours de partie.
 
-## Contraintes du cours appliquées
+## Les contraintes retenues et appliquées
 
 ### Vehicle.js — Ne pas toucher
 
@@ -44,7 +46,7 @@ Chaque entité du jeu **hérite de Vehicle** :
 | Fichier | Classe | Rôle |
 |---------|--------|------|
 | `stickman.js` | `Stickman extends Vehicle` | Bonhomme (joueur ou ennemi follower) |
-| `enemy.js` | `Enemy extends Vehicle` | Leader ennemi (gros bonhomme rouge en colère) |
+| `shark.js` | `Shark extends Vehicle` | Leader ennemi (gros bonhomme rouge en colère) |
 | `verseau.js` | `Verseau extends Vehicle` | Entité d'ambiance (wander + avoid) |
 | `voiture.js` | `Voiture extends Vehicle` | Tortue qui suit le circuit |
 | `obstacle.js` | `Obstacle extends Vehicle` | Rocher statique |
@@ -141,12 +143,48 @@ count_master/
 | Comportement | Exercice du prof | Utilisé par |
 |--------------|-----------------|-------------|
 | **Seek / Arrive** | Ex. 1, 3 | Stickman (followers), PlayerGroup |
-| **Pursue / Evade** | Ex. 2 | Shark (leader ennemi) |
+| **Pursue / Evade** | Ex. 2 |  Ennemy |
 | **Wander** | Ex. 4 | Verseau |
 | **Path Following** | Ex. 5-3 | Voiture |
 | **Obstacle Avoidance** | Ex. 6 | Tous (via `avoid()`) |
 | **Separation** | Ex. 7 (Boids) | Stickman (followers) |
 | **Boundaries** | Ex. 3, 6 | Verseau |
+
+## MON EXPERIENCE
+
+### Pourquoi ce jeu ?
+
+J'ai choisi de recréer **Count Masters** parce que c'est un jeu que je connaissais sur mobile et je trouvais que le concept de base (un groupe qui grandit ou rétrécit) se prêtait bien à l'utilisation de plusieurs steering behaviours en même temps. Ça me permettait de pas juste faire un truc avec un seul véhicule qui seek une cible, mais d'avoir plein d'entités avec des comportements différents qui coexistent sur le même écran.
+
+### Quels comportements j'ai choisi et pourquoi
+
+- **Arrive + Separate** pour le groupe du joueur : les stickmen suivent la souris avec arrive (pour le freinage quand ils sont proches) et separate pour qu'ils ne se superposent pas. C'est ce qui donne l'effet "groupe" naturel.
+- **Pursue** pour le leader ennemi (Shark) : il prédit la position future du joueur au lieu de juste le suivre bêtement, ça rend les ennemis plus menaçants.
+- **Wander + Boundaries + Avoid** pour les verseaux : c'est de l'ambiance, ils se baladent aléatoirement dans l'écran sans sortir du canvas et en évitant les rochers.
+- **Follow + Avoid** pour les voitures : elles suivent un circuit fermé (path following complexe de l'exercice 5-3) tout en évitant les obstacles.
+- **Obstacle Avoidance** un peu partout : presque toutes les entités utilisent `avoid()` pour ne pas rentrer dans les rochers.
+
+### Comment j'ai réglé les poids
+
+Le réglage des poids c'est ce qui m'a pris le plus de temps honnêtement. Par exemple pour le verseau :
+- `wander` à 1.0, `boundaries` à 3.0, `avoid` à 2.5
+- Si je mettais boundaries trop bas, les verseaux sortaient du canvas. Trop haut, ils restaient collés au centre.
+- Pour avoid, il fallait que ce soit plus fort que wander sinon ils fonçaient dans les rochers.
+
+Pour les voitures c'était pareil : `follow` à 2.0 et `avoid` à 3.0. Si avoid était trop faible elles traversaient les obstacles, si follow était trop faible elles quittaient le circuit.
+
+J'ai beaucoup testé en mode debug (touche D) pour voir les vecteurs et comprendre ce qui se passait.
+
+### Difficultés rencontrées
+
+ **Le reset du jeu** : quand j'appuyais sur R pour relancer, j'avais une erreur p5.js parce que j'appelais `setup()` directement. Il fallait en fait réinitialiser toutes les variables manuellement sans rappeler setup, parce que p5 n'aime pas qu'on rappelle setup depuis le code.
+
+ **Équilibrer le gameplay** : les ennemis étaient soit trop forts soit trop faibles. J'ai ajouté un timer de 10 secondes pour que les escouades meurent si elles ne rattrapent pas le joueur, et un scaling adaptatif qui ajuste la taille des escouades en fonction du nombre de joueurs.
+
+### IDE et modèles IA
+
+- **IDE** : Visual Studio Code
+- **Modèle IA** : Claude 
 
 ## Le lien vers la vidéo de démonstration du jeu :
 https://youtu.be/9enOIgsxRY0?si=y6wcVrnwqTWkyJSI
