@@ -147,3 +147,6 @@ count_master/
 | **Obstacle Avoidance** | Ex. 6 | Tous (via `avoid()`) |
 | **Separation** | Ex. 7 (Boids) | Stickman (followers) |
 | **Boundaries** | Ex. 3, 6 | Verseau |
+
+## Le lien vers la vidéo de démonstration du jeu :
+https://youtu.be/9enOIgsxRY0?si=y6wcVrnwqTWkyJSI
