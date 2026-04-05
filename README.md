@@ -44,7 +44,7 @@ Chaque entité du jeu **hérite de Vehicle** :
 | Fichier | Classe | Rôle |
 |---------|--------|------|
 | `stickman.js` | `Stickman extends Vehicle` | Bonhomme (joueur ou ennemi follower) |
-| `shark.js` | `Shark extends Vehicle` | Leader ennemi (gros bonhomme rouge en colère) |
+| `enemy.js` | `Enemy extends Vehicle` | Leader ennemi (gros bonhomme rouge en colère) |
 | `verseau.js` | `Verseau extends Vehicle` | Entité d'ambiance (wander + avoid) |
 | `voiture.js` | `Voiture extends Vehicle` | Tortue qui suit le circuit |
 | `obstacle.js` | `Obstacle extends Vehicle` | Rocher statique |
